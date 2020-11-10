@@ -85,7 +85,6 @@ for area = 1:length(cortical_areas)
     spiketable = zeros(1, size(spiketimes_cell, 1));
     spikemat_temp = zeros(1, size(spiketimes_cell, 1));
 
-    tic
     if use_parallel == true
         parfor i = 1:length(valid_trials) % each contact event
     %     for i = 4
@@ -134,8 +133,6 @@ for area = 1:length(cortical_areas)
 
         end
     end
-    
-    toc
 
     contactstable(1, :) = [];
     spiketable(1, :) = [];
