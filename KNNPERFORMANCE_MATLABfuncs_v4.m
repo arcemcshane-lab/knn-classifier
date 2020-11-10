@@ -88,7 +88,7 @@ for area = 1:length(cortical_areas)
     if use_parallel == true
         parfor i = 1:length(valid_trials) % each contact event
     %     for i = 4
-            for j = (1+offset_contacts):size(contactbyregionsallmarkers{i}, 1)-(200)*width+offset_contacts
+            for j = (1+offset_contacts):size(contactbyregionsallmarkers{valid_trials(i)}, 1)-(200)*width+offset_contacts
                 contactstable = vertcat(contactstable, any(contactbyregionsallmarkers{valid_trials(i)}(j:j+10, 13:18), 1));
             end
 
@@ -111,7 +111,7 @@ for area = 1:length(cortical_areas)
     else
         for i = valid_trials % each contact event
     %     for i = 4
-            for j = (1+offset_contacts):size(contactbyregionsallmarkers{i}, 1)-(200)*width+offset_contacts
+            for j = (1+offset_contacts):size(contactbyregionsallmarkers{valid_trials(i)}, 1)-(200)*width+offset_contacts
                 contactstable = vertcat(contactstable, any(contactbyregionsallmarkers{i}(j:j+10, 13:18), 1));
             end
 
