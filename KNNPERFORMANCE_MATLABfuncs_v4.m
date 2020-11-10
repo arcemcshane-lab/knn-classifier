@@ -6,7 +6,7 @@ load(strcat('201902', date, '_CranialKinematics.mat')) %fully digitized Rocky tr
 load(strcat('201902', date, 'contactbyregionsallmarkers.mat'))
 % rng(42) % set seed for reproduction
 sorting = false;
-use_parallel = true;
+use_parallel = false;
 
 tic
 %% BEGIN FOR LOOP
@@ -16,10 +16,13 @@ for area = 1:length(cortical_areas)
     NEV_cell = struct2cell(NEV); %converts to cell for easier indexing
     
     %% FIND MISALIGNED TRIALS
-    width = 0.05; % sliding window width
+    width = 0.05; % sliding window width (s)
+    offset_contacts = 0; % sliding window offset for contactstable (s)
+    offset_spikes = 0.05; % sliding window offset for spiketable (s)
     
     contacts_frames = [];
     spikes_frames = [];  
+    total_frames = [];
     
     total_rows = 0;
     
@@ -27,13 +30,13 @@ for area = 1:length(cortical_areas)
       x = 0;
       y = 0;
 %     for i = 3
-        for j = 1:size(contactbyregionsallmarkers{i}, 1)-10
+        for j = (1+offset_contacts):size(contactbyregionsallmarkers{i}, 1)-(200)*width+offset_contacts
             x = x+1;
         end
 
 %       for i = 3
-        starttime = Kinematics.index{i}(1, 3) / 30000;
-        endtime = Kinematics.index{i}(size(Kinematics.index{i}, 1), 3) / 30000;
+        starttime = Kinematics.index{i}(1, 3) / 30000 + offset_spikes;
+        endtime = Kinematics.index{i}(size(Kinematics.index{i}, 1), 3) / 30000 + offset_spikes;
 
         winstart = starttime:0.005:endtime - width;
 
@@ -46,6 +49,7 @@ for area = 1:length(cortical_areas)
      
      if x == y
          total_rows = total_rows + x;
+         total_frames = [total_frames; x];
      end
      
     end
@@ -79,21 +83,29 @@ for area = 1:length(cortical_areas)
     spiketimes_cell = struct2cell(spiketimes);
    
     %% POPULATE CONTACTS AND SPIKES
-    contactstable = zeros(1, 6);
-    spiketable = zeros(1, size(spiketimes_cell, 1));
+%     contactstable = zeros(1, 6);
+%     spiketable = zeros(1, size(spiketimes_cell, 1));
+    contactstable = zeros(total_rows, 6);
+    spiketable = zeros(total_rows, size(spiketimes_cell, 1));
     spikemat_temp = zeros(1, size(spiketimes_cell, 1));
-    width = 0.05; % sliding window width
+    contacts_temp = zeros(1, 6);
+    idx_contacts = 0;
+    idx_spikes = 0;
+    cum_frames = cumsum(total_frames);
 
-    tic
     if use_parallel == true
         parfor i = 1:length(valid_trials) % each contact event
     %     for i = 4
-            for j = 1:size(contactbyregionsallmarkers{valid_trials(i)}, 1)-10
-                contactstable = vertcat(contactstable, any(contactbyregionsallmarkers{valid_trials(i)}(j:j+10, 13:18), 1));
+            idx_contacts = cum_frames(i);
+            idx_spikes = cum_frames(i);
+            for j = (1+offset_contacts):size(contactbyregionsallmarkers{valid_trials(i)}, 1)-(200)*width+offset_contacts
+%                 contactstable = vertcat(contactstable, any(contactbyregionsallmarkers{valid_trials(i)}(j:j+10, 13:18), 1));
+%                 contacts_temp = vertcat(contactstable, any(contactbyregionsallmarkers{valid_trials(i)}(j:j+10, 13:18), 1));
+                contactstable(idx_contacts, :) = any(contactbyregionsallmarkers{valid_trials(i)}(j:j+10, 13:18), 1);
             end
 
-            starttime = Kinematics.index{valid_trials(i)}(1, 3) / 30000;
-            endtime = Kinematics.index{valid_trials(i)}(size(Kinematics.index{valid_trials(i)}, 1), 3) / 30000;
+            starttime = Kinematics.index{valid_trials(i)}(1, 3) / 30000 + offset_spikes;
+            endtime = Kinematics.index{valid_trials(i)}(size(Kinematics.index{valid_trials(i)}, 1), 3) / 30000 + offset_spikes;
             spikemat_temp = zeros(1, size(spiketimes_cell, 1));
 
             winstart = starttime:0.005:endtime - width;
@@ -101,40 +113,49 @@ for area = 1:length(cortical_areas)
             for j = 1:size(winstart, 2)
 
                 for k = 1:size(spiketimes_cell, 1)
-                     spikemat_temp(j, k) = length(find(spiketimes_cell{k} >= winstart(j) & spiketimes_cell{k} <= winstart(j) + width));
+%                      spikemat_temp(j, k) = length(find(spiketimes_cell{k} >= winstart(j) & spiketimes_cell{k} <= winstart(j) + width));
+                    spiketable(idx_spikes, :) = length(find(spiketimes_cell{k} >= winstart(j) & spiketimes_cell{k} <= winstart(j) + width));
                 end
+                
+                idx_spikes = idx_spikes + 1;
 
             end
 
-            spiketable = vertcat(spiketable, spikemat_temp);
+%             spiketable = vertcat(spiketable, spikemat_temp);
         end
     else
         for i = valid_trials % each contact event
-    %     for i = 4
-            for j = 1:size(contactbyregionsallmarkers{i}, 1)-10
-                contactstable = vertcat(contactstable, any(contactbyregionsallmarkers{i}(j:j+10, 13:18), 1));
+%         for i = 67
+            for j = (1+offset_contacts):size(contactbyregionsallmarkers{valid_trials(i)}, 1)-(200)*width+offset_contacts
+%                 contactstable = vertcat(contactstable, any(contactbyregionsallmarkers{valid_trials(i)}(j:j+10, 13:18), 1));
+                idx_contacts = idx_contacts + 1;
+                contactstable(idx_contacts, :) = any(contactbyregionsallmarkers{valid_trials(i)}(j:j+200*width, 13:18), 1);
+                
             end
 
-            starttime = Kinematics.index{i}(1, 3) / 30000;
-            endtime = Kinematics.index{i}(size(Kinematics.index{i}, 1), 3) / 30000;
+            starttime = Kinematics.index{valid_trials(i)}(1, 3) / 30000 + offset_spikes;
+            endtime = Kinematics.index{valid_trials(i)}(size(Kinematics.index{valid_trials(i)}, 1), 3) / 30000 + offset_spikes;
             spikemat_temp = zeros(1, size(spiketimes_cell, 1));
 
             winstart = starttime:0.005:endtime - width;
 
             for j = 1:size(winstart, 2)
+                
+                idx_spikes = idx_spikes + 1;
 
                 for k = 1:size(spiketimes_cell, 1)
-                     spikemat_temp(j, k) = length(find(spiketimes_cell{k} >= winstart(j) & spiketimes_cell{k} <= winstart(j) + width));
+%                      spikemat_temp(j, k) = length(find(spiketimes_cell{k} >= winstart(j) & spiketimes_cell{k} <= winstart(j) + width));
+                    spikemat_temp(1, k) = length(find(spiketimes_cell{k} >= winstart(j) & spiketimes_cell{k} <= winstart(j) + width));
                 end
+                
+                spiketable(idx_spikes, :) = spikemat_temp;
 
             end
 
-            spiketable = vertcat(spiketable, spikemat_temp);
+%             spiketable = vertcat(spiketable, spikemat_temp);
 
         end
     end
-    
-    toc
 
     contactstable(1, :) = [];
     spiketable(1, :) = [];
@@ -144,8 +165,8 @@ for area = 1:length(cortical_areas)
     % not account for spiking before and after trials
     
     if sorting == true
-        suprameanspike = sum(spiketable((1:10:150300),:))/0.050; % sum every tenth frame then divide by real world time
-        suprameanspike = suprameanspike/length((1:10:150300)); % take mean
+        suprameanspike = sum(spiketable((1:10:length(spiketable)),:))/0.050; % sum every tenth frame then divide by real world time
+        suprameanspike = suprameanspike/length((1:10:length(spiketable))); % take mean
 
         bad_spikes = [];
 
@@ -154,10 +175,9 @@ for area = 1:length(cortical_areas)
                 bad_spikes = [bad_spikes ; i];
             end
         end
-
-        for i = 1:length(bad_spikes)
-            spiketable(:, bad_spikes(i)) = [];
-        end
+        
+        spiketable(:, bad_spikes) = [];
+        
     end
     %% CLASSIFY TRAINING AND TEST DATA
 %     rng(42);
