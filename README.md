@@ -9,6 +9,7 @@ Data/features that we suspect are associate with feeding/mouth somatosensation:
 -Also EMG data? Need to ask about this.
 
 Trained with and used to predict different kinematic behavior:
+
 - Contact event locations on the palate (e.g. 13, 14), and their trajectories
     -Two days for Rocky only, one nerve block, one without. How to include more?
     -Three types of interventions: nerve block with lingual nerve, nerve block without     lingual nerve, and control
@@ -22,33 +23,47 @@ Need to be able to generalize out of single day trials to more. Trained classifi
 On 10/28/2020, we have the following kinematic data sets complete:
     
 Duplet
+
 Ry20190227 (All nerve blocks)
-    Ry20190228 (Control)
+
+Ry20190228 (Control)
     
 Triplet
+
 Ye20190508(No lingual nerve, going through the pipeline, won’t get it in time)
-    Ye20190509 (Control)
-    Ye20190510 (All nerve blocks)
+
+Ye20190509 (Control)
+    
+Ye20190510 (All nerve blocks)
 
 Sorted NEV -> Eliminate low SNR units (<2) -> Each region
 
-
-
 Completed:
+
 Binary palate region contact with the following regions:
+
 M1U Ry20190227 (All nerve blocks) 190 units
+
 M1F Ry20190227 (All nerve blocks) 36 units
-    S1U Ry20190227 (All nerve blocks) 33 units
-    S1F Ry20190227 (All nerve blocks) 27 units
+
+S1U Ry20190227 (All nerve blocks) 33 units
+
+S1F Ry20190227 (All nerve blocks) 27 units
 
 To do, by order of importance:
+
 S1U Ry20190227 (All nerve blocks)
+
 S1U Ry20190228 (No nerve blocks)
 
 Nerve block is:
+
 Inferior alveolar nerve @ mandibular foramen
+
 [Optional] Lingual nerve @ 
+
 Buccal nerve(cheeky!) @ 
+
 Greater palatine nerve @ greater palatine foramen
 
 11/20/2020 meeting
