@@ -1,5 +1,6 @@
 # KNN-Classifier
 [Document link](https://docs.google.com/document/d/1DlprCeO_yCAFl605km7NrIExPAnbm1X1axNf4igZ-3I/edit?usp=sharing)
+
 KNN Classifier for neuronal spiking
 Outline of all the data and options for classifier construction:
 
