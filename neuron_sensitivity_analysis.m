@@ -204,5 +204,27 @@ for area = 1:1
         end
     
     end
+    %% GRAPH GEOM INDICIES
+    neuron_sensitivity = [];
+    err = [];
+    
+    for i = 1:length(geom_index) % 1 to 40
+       neuron_sensitivity(i) =  mean(geom_index{1}{i});
+       %err(i) =(1.96*std(neuron_sensitivity{i}))/sqrt(length(neuron_sensitivity{i})); % 95% confidence interval
+    end
+    
+    neuron_sensitivity(isnan(neuron_sensitivity))=0; % changes NaN to 0
+    err(isnan(err))=0; 
+
+    figure
+    title('Geometric Indicies of FR for 40 neurons in M1F based on contact')
+    y1 = bar((1:40),neuron_sensitivity(1,1:40));
+    y1.FaceColor = 'flat';
+    ylabel('geom')
+    xlabel('neuron')
+    %set(gca,'xticklabel',(1:40))
+    %hold on
+    % errorbar(neuron_sensitivity(1,1:40),err(1:40),'k.');
+    
 %% END FOR LOOP
 end
