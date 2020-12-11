@@ -204,27 +204,56 @@ for area = 1:1
         end
     
     end
-    %% GRAPH GEOM INDICIES
-    neuron_sensitivity = [];
-    err = [];
     
-    for i = 1:length(geom_index) % 1 to 40
-       neuron_sensitivity(i) =  mean(geom_index{1}{i});
-       %err(i) =(1.96*std(neuron_sensitivity{i}))/sqrt(length(neuron_sensitivity{i})); % 95% confidence interval
+    %% CALCULATE 95% CIs
+    
+    geom_stats = []; % (mean, SD)
+    geom_stats.total = zeros(1, length(spiketimes_cell)); 
+    
+    for i = valid_trials
+        
+        if size(contact_onsets{i}, 1) > 0
+        
+            temp_mat = zeros(size(contact_onsets{i}, 1), 1);
+
+            for neuron = 1:length(spiketimes_cell)
+
+                temp_mat = horzcat(temp_mat, geom_index{neuron}{i});
+
+            end
+
+            temp_mat(:, 1) = [];
+
+            geom_stats.total = [ geom_stats.total; temp_mat ];
+            
+        end
+        
     end
     
-    neuron_sensitivity(isnan(neuron_sensitivity))=0; % changes NaN to 0
-    err(isnan(err))=0; 
-
-    figure
-    title('Geometric Indicies of FR for 40 neurons in M1F based on contact')
-    y1 = bar((1:40),neuron_sensitivity(1,1:40));
-    y1.FaceColor = 'flat';
-    ylabel('geom')
-    xlabel('neuron')
-    %set(gca,'xticklabel',(1:40))
-    %hold on
-    % errorbar(neuron_sensitivity(1,1:40),err(1:40),'k.');
+    geom_stats.mean(1, :) = mean(geom_stats.total, 1, 'omitnan');
+    geom_stats.std(1, :) = std(geom_stats.total, 1, 'omitnan');
+    geom_stats.se(1, :) = geom_stats.mean ./ sqrt(geom_stats.std);
+    geom_stats.ci(1, :) = geom_stats.mean - geom_stats.se*1.96;
+    geom_stats.ci(2, :) = geom_stats.mean + geom_stats.se*1.96;
+    geom_stats.ci(3, :) = geom_stats.se*1.96;
+    geom_stats.total(1, :) = [];
     
+    %% GRAPH GEOM INDICES
+    
+    i = 1; % change to iterate over valid_trials
+    neuron = 1; % change to iterate over neurons
+    
+    x = 1:length(spiketimes_cell);
+    
+    fig = figure;
+    fig = bar(x, geom_stats.mean);
+    
+    hold on
+    
+    er = errorbar(x, geom_stats.mean, -1 * geom_stats.ci(3, :), geom_stats.ci(3, :));
+    er.Color = 'black';
+    er.LineStyle = 'none';
+    
+    hold off
 %% END FOR LOOP
 end
