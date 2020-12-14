@@ -1,6 +1,72 @@
 # KNN-Classifier
 [Document link](https://docs.google.com/document/d/1DlprCeO_yCAFl605km7NrIExPAnbm1X1axNf4igZ-3I/edit?usp=sharing)
 
+Timeline:
+
+By Mon, Dec 28th:
+Part I:
+10 repetitions for the KNN classifier on each of the following areas:
+
+Ry20190227 (All nerve blocks)
+
+    M1U (In progress)
+
+    M1F
+
+    S1U
+
+    S1F
+
+Ry20190228 (Control)
+
+    M1U
+
+    M1F
+
+    S1U
+
+    S1F
+    
+Triplet
+
+Ye20190508(No lingual nerve)
+
+    M1U
+
+    M1F
+
+    S1U
+
+    S1F
+
+Ye20190509 (Control)
+
+    M1U
+
+    M1F
+
+    S1U
+
+    S1F
+    
+Ye20190510 (All nerve blocks)
+
+    M1U
+
+    M1F
+
+    S1U
+
+    S1F
+    
+Part II:
+Some sensitivity critera
+    
+Mon, Jan 4th: Soft Deadline for Materials
+
+Mon, Jan 11th @ 10am CT: Presentation
+
+
 KNN Classifier for neuronal spiking
 Outline of all the data and options for classifier construction:
 
