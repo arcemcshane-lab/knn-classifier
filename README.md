@@ -66,6 +66,8 @@ Mon, Jan 4th: Soft Deadline for Materials
 
 Mon, Jan 11th @ 10am CT: Presentation
 
+Barry: only item to consider IF IF you have room, is to insert in parentheses a p value and stats test used to reflect 'better' and /or 'improved"'
+
 
 KNN Classifier for neuronal spiking
 Outline of all the data and options for classifier construction:
