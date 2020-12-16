@@ -1,8 +1,12 @@
 %% LOAD DATA
-date = num2str(28);
+date = 27;
+date = num2str(date);
 cortical_areas = {'M1F'; 'M1U'; 'S1F'; 'S1U'};
 load(strcat('201902', date, 'graphs.mat')) %hits for 6 markers for 2000 ms window trials
 load(strcat('201902', date, '_CranialKinematics.mat')) %fully digitized Rocky trials
+
+max_window_size = 30; % frames; an int; set to 9999 for unbounded window sizing
+offset_before_after_contact_events = 5; % frames; an int; how many frames ignored before/after each contact event
 
 %% FIND MISALIGNED TRIALS
 
@@ -72,6 +76,7 @@ clear onset_offset_binary_* i j
 % for area = 1:length(cortical_areas)
 for area = 1:1
     %% LOAD DATA    
+    disp(cortical_areas{area});
     NEV = load(strcat('201902', date, '_', cortical_areas{area}, '_sortedspikes.mat'));
     NEV_cell = struct2cell(NEV); %converts to cell for easier indexing
     
@@ -122,6 +127,8 @@ for area = 1:1
     
     legend({'Contact Events', 'Neuron Spiking'}, 'Location', 'northeastoutside')
     
+    title(sprintf('Spikes and Contact Events, %s', cortical_areas{area}));
+    
     hold off
     
     %% POPULATE FR TABLES
@@ -143,18 +150,21 @@ for area = 1:1
 
                 if j == 1 % Special case for first contact event
                     if contact_onsets{i}(j, 1) ~= 1 % If first contact event does not start at beginning of trial
-                        starttime_1 = Kinematics.index{i}(1, 3) / 30000;
+                        starting_frame = contact_onsets{i}(j, 1) - min([max_window_size, contact_onsets{i}(j, 1)]) + 1;
+                        starttime_1 = Kinematics.index{i}(starting_frame, 3) / 30000;
                         endtime_1 = contact_onsets{i}(j, 2) / 30000;
                     else % If first contact event does start at beginning of trial
                         starttime_1 = 0;
                         endtime_1 = 0;
                     end
                     starttime_2 = contact_offsets{i}(j, 2) / 30000;
+                    ending_frame = contact_offsets{i}(j, 1) + min([max_window_size, contact_onsets{i}(j+1, 1) - contact_offsets{i}(j, 1)]);
                     endtime_2 = contact_onsets{i}(j+1, 2) / 30000;
                 elseif j == size(contact_onsets{i}, 1) % Special case for last contact event
                     if contact_offsets{i}(j, 1) ~= length(graphme{i}) % If last contact event does not go to the end of trial
                         starttime_2 = contact_offsets{i}(j, 2) / 30000;
-                        endtime_2 = Kinematics.index{i}(length(graphme{i}), 3) / 30000;
+                        ending_frame = contact_offsets{i}(j, 1) + min([max_window_size, length(graphme{i}) - contact_offsets{i}(j, 1)]);
+                        endtime_2 = Kinematics.index{i}(ending_frame, 3) / 30000;
                     else % If last contact event does go to the end of trail
                         starttime_2 = 0;
                         endtime_2 = 0;
@@ -162,11 +172,13 @@ for area = 1:1
                     starttime_1 = contact_offsets{i}(j-1, 2) / 30000;
                     endtime_1 = contact_onsets{i}(j, 2) / 30000;
                 else % All other contact events
-                    starttime_1 = contact_offsets{i}(j-1, 2) / 30000;
+                    starting_frame = contact_onsets{i}(j, 1) - min([max_window_size, contact_onsets{i}(j, 1) - contact_offsets{i}(j-1, 1)]);
+                    starttime_1 = Kinematics.index{i}(starting_frame, 3) / 30000;
                     endtime_1 = contact_onsets{i}(j, 2) / 30000;
 
                     starttime_2 = contact_offsets{i}(j, 2) / 30000;
-                    endtime_2 = contact_onsets{i}(j+1, 2) / 30000;
+                    ending_frame = contact_offsets{i}(j, 1) + min([max_window_size, contact_onsets{i}(j+1, 1) - contact_offsets{i}(j, 1)]);
+                    endtime_2 = Kinematics.index{i}(ending_frame, 3) / 30000;
                 end
 
 
@@ -189,54 +201,82 @@ for area = 1:1
     
     end        
     
-    %% CALCULATE GEOM INDEX FOR FR
+    %% CALCULATE GEOM INDEX FOR FR 
     
-    i = 1; % change to loop over all valid_trials
+    geom_stats = []; % (mean, SD)
     
-    geom_index = [];
+    geom_stats.index_per_trial = [];
+    geom_stats.avg_fr_during = [];
+    geom_stats.avg_fr_before_after = [];
+    geom_stats.std_during = [];
+    geom_stats.std_before_after = [];
     
     for i = valid_trials
     
+        temp_1_avg = [];
+        temp_1_std = [];
+        temp_2_avg = [];
+        temp_2_std = [];
+        
         for neuron = 1:length(spiketimes_cell)
 
-            geom_index{neuron}{i} = (fr_before_after{neuron}{i} - fr_during{neuron}{i}) ./ (fr_before_after{neuron}{i} + fr_during{neuron}{i});
+            geom_stats.index_per_trial{neuron}{i} = (fr_before_after{neuron}{i} - fr_during{neuron}{i}) ./ (fr_before_after{neuron}{i} + fr_during{neuron}{i});
+            
+            temp_1_avg = horzcat(temp_1_avg, mean(fr_during{neuron}{i}));
+            temp_1_std = horzcat(temp_1_std, std(fr_during{neuron}{i}));
+            temp_2_avg = horzcat(temp_2_avg, mean(fr_before_after{neuron}{i}));
+            temp_2_std = horzcat(temp_2_std, std(fr_during{neuron}{i}));
 
         end
     
+        geom_stats.avg_fr_during = [geom_stats.avg_fr_during; temp_1_avg];
+        geom_stats.std_during = [geom_stats.std_during; temp_1_std];
+        geom_stats.avg_fr_before_after = [geom_stats.avg_fr_before_after; temp_2_avg];
+        geom_stats.std_before_after = [geom_stats.std_during; temp_2_std];
+        
     end
+    
+    geom_stats.avg_fr_during = mean(geom_stats.avg_fr_during, 1, 'omitnan');
+    geom_stats.avg_fr_before_after = mean(geom_stats.avg_fr_before_after, 1, 'omitnan');
+    
+    geom_stats.std_during = mean(geom_stats.std_during, 1, 'omitnan');
+    geom_stats.std_before_after = mean(geom_stats.std_before_after, 1, 'omitnan');
+    
+    geom_stats.std_mean = mean([geom_stats.std_during ; geom_stats.std_before_after], 1, 'omitnan');
+    
+    geom_stats.geom_index(1, :) = (geom_stats.avg_fr_before_after - geom_stats.avg_fr_during) ./ (geom_stats.avg_fr_before_after + geom_stats.avg_fr_during);
     
     %% CALCULATE 95% CIs
     
-    geom_stats = []; % (mean, SD)
-    geom_stats.total = zeros(1, length(spiketimes_cell)); 
+%     geom_stats.total = zeros(1, length(spiketimes_cell)); 
+%     
+%     for i = valid_trials
+%         
+%         if size(contact_onsets{i}, 1) > 0
+%         
+%             temp_mat = zeros(size(contact_onsets{i}, 1), 1);
+% 
+%             for neuron = 1:length(spiketimes_cell)
+% 
+%                 temp_mat = horzcat(temp_mat, geom_index{neuron}{i});
+% 
+%             end
+% 
+%             temp_mat(:, 1) = [];
+% 
+%             geom_stats.total = [ geom_stats.total; temp_mat ];
+%             
+%         end
+%         
+%     end
     
-    for i = valid_trials
-        
-        if size(contact_onsets{i}, 1) > 0
-        
-            temp_mat = zeros(size(contact_onsets{i}, 1), 1);
-
-            for neuron = 1:length(spiketimes_cell)
-
-                temp_mat = horzcat(temp_mat, geom_index{neuron}{i});
-
-            end
-
-            temp_mat(:, 1) = [];
-
-            geom_stats.total = [ geom_stats.total; temp_mat ];
-            
-        end
-        
-    end
-    
-    geom_stats.mean(1, :) = mean(geom_stats.total, 1, 'omitnan');
-    geom_stats.std(1, :) = std(geom_stats.total, 1, 'omitnan');
-    geom_stats.se(1, :) = geom_stats.mean ./ sqrt(geom_stats.std);
-    geom_stats.ci(1, :) = geom_stats.mean - geom_stats.se*1.96;
-    geom_stats.ci(2, :) = geom_stats.mean + geom_stats.se*1.96;
+%     geom_stats.mean(1, :) = mean(geom_stats.total, 1, 'omitnan');
+%     geom_stats.std(1, :) = std(geom_stats.total, 1, 'omitnan');
+    geom_stats.se(1, :) = geom_stats.geom_index ./ sqrt(geom_stats.std_mean);
+    geom_stats.ci(1, :) = geom_stats.geom_index - geom_stats.se*1.96;
+    geom_stats.ci(2, :) = geom_stats.geom_index + geom_stats.se*1.96;
     geom_stats.ci(3, :) = geom_stats.se*1.96;
-    geom_stats.total(1, :) = [];
+%     geom_stats.total(1, :) = [];
     
     %% GRAPH GEOM INDICES
     
@@ -246,14 +286,60 @@ for area = 1:1
     x = 1:length(spiketimes_cell);
     
     fig = figure;
-    fig = bar(x, geom_stats.mean);
+    fig = bar(x, geom_stats.geom_index);
     
     hold on
     
-    er = errorbar(x, geom_stats.mean, -1 * geom_stats.ci(3, :), geom_stats.ci(3, :));
+%     er = errorbar(x, geom_stats.geom_index, -1 * geom_stats.ci(3, :), geom_stats.ci(3, :));
+    er = errorbar(x, geom_stats.geom_index, -1 * geom_stats.std_mean / sqrt(length(graphme)), geom_stats.std_mean / sqrt(length(graphme)));
     er.Color = 'black';
     er.LineStyle = 'none';
+    title(sprintf('Geom Indices, %s', cortical_areas{area}));
     
     hold off
+    
+    %% GRAPH PER NEURON (as req'd by Fritzie)
+    
+    [geom_max, neuron_max] = max(geom_stats.geom_index);
+    [geom_min, neuron_min] = min(geom_stats.geom_index);
+    
+    i = 1;
+    
+    fig1 = figure(1);
+    hold on
+    
+    for i = valid_trials
+    
+        scatter(fr_during{neuron_max}{i}, fr_before_after{neuron_max}{i}, 'r');
+        scatter(fr_during{neuron_min}{i}, fr_before_after{neuron_min}{i}, 'g');
+        
+    end
+    
+    xlabel('FR During Contact Events');
+    ylabel('FR Before and After Contact Events');
+    legend({sprintf('Max Geom: Neuron %i, Geom Index = %f', neuron_max, geom_max), sprintf('Min Geom: Neuron %i, Geom Index = %f', neuron_min, geom_min)})
+    title(sprintf('Figure 1. All Iterations, %s', cortical_areas{area}));
+    
+    hold off
+    
+    fig3 = figure(3);    
+    
+    hold on
+    
+    scatter(geom_stats.avg_fr_during, geom_stats.avg_fr_before_after);
+    xlabel('Average FR During Contact Events');
+    ylabel('FR Before and After Contact Events');
+    title(sprintf('Figure 3. Average FR During and After Contact Events, %s', cortical_areas{area}));
+    x = max(geom_stats.avg_fr_during);
+    y = max(geom_stats.avg_fr_before_after);
+    plot(linspace(0, max(x, y)), linspace(0, max(x, y)));
+    axis square
+    
+    hold off
+    
+    %% CLEARVARS
+    
+    clearvars -except area contact_* cortical_areas date graphme Kinematics max_window_size misaligned_trials offset_before_after_contact_events valid_trials
+    
 %% END FOR LOOP
 end
