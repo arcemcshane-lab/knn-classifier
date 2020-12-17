@@ -9,7 +9,7 @@ Part I:
 
 Ry20190227 (All nerve blocks)
 
-    M1U (In progress)
+    M1U (Stopped at rep2, investigating why)
 
     M1F
 
@@ -68,6 +68,14 @@ Mon, Jan 11th @ 10am CT: Presentation
 
 Barry: only item to consider IF IF you have room, is to insert in parentheses a p value and stats test used to reflect 'better' and /or 'improved"'
 
+Electrode Array locations:
+M1U - Rostral Orofacial M1
+M1F - Caudal Orofacial M1(more proprioceptive-dependant activity)
+S1U - area 1,2
+S1F - area 3a/3b(3a is first level processing of )
+
+Utah arrays @ 1.5mm depth to layers IV and V of neocortex
+FM arrays @ 1.0mm depth(?)
 
 KNN Classifier for neuronal spiking
 Outline of all the data and options for classifier construction:
