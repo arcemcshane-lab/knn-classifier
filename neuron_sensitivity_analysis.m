@@ -2,8 +2,10 @@
 date = 27;
 date = num2str(date);
 cortical_areas = {'M1F'; 'M1U'; 'S1F'; 'S1U'};
-load(strcat('201902', date, 'graphs.mat')) %hits for 6 markers for 2000 ms window trials
+palatal_regions = {'Ant. R', 'Ant. L', 'Med. R', 'Med. L', 'Pos. R', 'Pos. L'};
+% load(strcat('201902', date, 'graphs.mat')) %hits for 6 markers for 2000 ms window trials
 load(strcat('201902', date, '_CranialKinematics.mat')) %fully digitized Rocky trials
+load(strcat('201902', date, 'contactbyregionsallmarkers'))
 
 max_window_size = 30; % frames; an int; set to 9999 for unbounded window sizing
 offset_before_after_contact_events = 5; % frames; an int; how many frames ignored before/after each contact event
@@ -13,9 +15,9 @@ offset_before_after_contact_events = 5; % frames; an int; how many frames ignore
 misaligned_trials = [];
 misaligned_trials = 0;
 
-for i = 1:length(graphme)
+for i = 1:length(contactbyregionsallmarkers)
     
-    if length(graphme{i}) ~= length(Kinematics.index{i})
+    if length(contactbyregionsallmarkers{i}) ~= length(Kinematics.index{i})
         misaligned_trials = [misaligned_trials ; i];
     end
     
@@ -23,7 +25,7 @@ end
 
 misaligned_trials(1) = [];
 
-valid_trials = 1:length(graphme);
+valid_trials = 1:length(contactbyregionsallmarkers);
 valid_trials(misaligned_trials) = [];
 
 %% CALCULATE CONTACT ONSETS, OFFSETS
@@ -35,12 +37,12 @@ for i = valid_trials
     onset_offset_binary_1 = 0; % 0 = no contact during this timestep; 1 = yes contact during this timestep. init as 0
     contact_onsets{i} = [];
     contact_offsets{i} = [];
-
-    for j = 1:size(graphme{i}, 1)
+    
+    for j = 1:size(contactbyregionsallmarkers{i}, 1)
        if j > 1
-           onset_offset_binary_1 = any(graphme{i}(j-1, :));
+           onset_offset_binary_1 = any(contactbyregionsallmarkers{i}(j-1, :));
        end
-       onset_offset_binary_2 = any(graphme{i}(j, :));
+       onset_offset_binary_2 = any(contactbyregionsallmarkers{i}(j, :));
        if onset_offset_binary_1 - onset_offset_binary_2 == -1
            contact_onsets{i} = [contact_onsets{i} ; j];
        elseif onset_offset_binary_1 - onset_offset_binary_2 == 1
@@ -55,7 +57,7 @@ for i = valid_trials
         end
 
         if contact_onsets{i}(size(contact_onsets{i}, 1)) > contact_offsets{i}(size(contact_offsets{i}, 1))
-            contact_offsets{i} = [contact_offsets{i} ; size(graphme{i}, 1) ];
+            contact_offsets{i} = [contact_offsets{i} ; size(contactbyregionsallmarkers{i}, 1) ];
         end
     
     end
@@ -88,6 +90,8 @@ for area = 1:1
         spiketimes.(string(spikenames(i))) = NEV_cell{i}.times;
     end
     spiketimes_cell = struct2cell(spiketimes);
+    
+    clear NEV NEV_cell spiketimes spikenames
    
     %% CALCULATE GRAPH STARTS AND ENDS
     spikes = [];
@@ -144,10 +148,6 @@ for area = 1:1
 
             for j = 1:size(contact_onsets{i}, 1)
 
-                % make starttime, endtime for ranges around each contact event. May
-                % need starttime_1, endtime_1 and *_2 for each (before and after).
-                % Calculate the FR, compare with fr_during
-
                 if j == 1 % Special case for first contact event
                     if contact_onsets{i}(j, 1) ~= 1 % If first contact event does not start at beginning of trial
                         starting_frame = contact_onsets{i}(j, 1) - min([max_window_size, contact_onsets{i}(j, 1)]) + 1;
@@ -161,9 +161,9 @@ for area = 1:1
                     ending_frame = contact_offsets{i}(j, 1) + min([max_window_size, contact_onsets{i}(j+1, 1) - contact_offsets{i}(j, 1)]);
                     endtime_2 = contact_onsets{i}(j+1, 2) / 30000;
                 elseif j == size(contact_onsets{i}, 1) % Special case for last contact event
-                    if contact_offsets{i}(j, 1) ~= length(graphme{i}) % If last contact event does not go to the end of trial
+                    if contact_offsets{i}(j, 1) ~= length(contactbyregionsallmarkers{i}) % If last contact event does not go to the end of trial
                         starttime_2 = contact_offsets{i}(j, 2) / 30000;
-                        ending_frame = contact_offsets{i}(j, 1) + min([max_window_size, length(graphme{i}) - contact_offsets{i}(j, 1)]);
+                        ending_frame = contact_offsets{i}(j, 1) + min([max_window_size, length(contactbyregionsallmarkers{i}) - contact_offsets{i}(j, 1)]);
                         endtime_2 = Kinematics.index{i}(ending_frame, 3) / 30000;
                     else % If last contact event does go to the end of trail
                         starttime_2 = 0;
@@ -287,13 +287,14 @@ for area = 1:1
     
     fig = figure;
     fig = bar(x, geom_stats.geom_index);
+    ylim([-1, 1]);
     
     hold on
     
 %     er = errorbar(x, geom_stats.geom_index, -1 * geom_stats.ci(3, :), geom_stats.ci(3, :));
-    er = errorbar(x, geom_stats.geom_index, -1 * geom_stats.std_mean / sqrt(length(graphme)), geom_stats.std_mean / sqrt(length(graphme)));
-    er.Color = 'black';
-    er.LineStyle = 'none';
+%     er = errorbar(x, geom_stats.geom_index, -1 * geom_stats.std_mean / sqrt(length(contactbyregionsallmarkers)), geom_stats.std_mean / sqrt(length(contactbyregionsallmarkers)));
+%     er.Color = 'black';
+%     er.LineStyle = 'none';
     title(sprintf('Geom Indices, %s', cortical_areas{area}));
     
     hold off
@@ -337,9 +338,84 @@ for area = 1:1
     
     hold off
     
+    %% GRAPH CONTACT TUNING CURVES
+    % Eventually change to not be agnostic of contact intensity
+    
+    geom_to_plot = [];
+    
+    for region = 13:18
+        temp = [];
+
+        % iterate per contact event, if region touched during contact event
+        % then plot geom index
+
+        row = 1;
+
+        for i = valid_trials
+
+            for j = 1:length(contact_onsets{i})
+
+                if any(contactbyregionsallmarkers{i}(contact_onsets{i}(j, 1):contact_offsets{i}(j, 1), region))
+                    for neuron = 1:length(spiketimes_cell)
+                        temp(row, neuron) = geom_stats.index_per_trial{neuron}{i}(j);
+                    end
+                    row = row+1;
+                end
+
+            end
+
+        end
+
+        x = 1:length(spiketimes_cell);
+        
+        temp = mean(temp, 1, 'omitnan');
+
+        geom_to_plot = [geom_to_plot ; temp];
+    
+    end
+
+    x = 1:length(spiketimes_cell);
+
+    for region = 13:18
+        figure(region - 12);
+        bar(x, geom_to_plot(region - 12, :));
+        ylim([-1, 1]);
+        title(sprintf('Tuning Curve, %s, Palatal Region %i', cortical_areas{area}, region));
+        xlabel('Neuron');
+        ylabel('Geom Index');
+    end
+    
+    %% GRAPH/CALCULATE SINGLE NEURON TUNING CURVES
+    
+    pref_areas = zeros(3, length(spiketimes_cell));
+    for neuron = 1:length(spiketimes_cell)
+        [~, pref_areas(1, neuron)] = max(geom_to_plot(:, neuron));
+        if any(geom_to_plot(:, neuron) > 0)
+            [~, pref_areas(2, neuron)] = max(geom_to_plot(:, neuron));
+            pref_areas(3, neuron) = 1;
+        else
+            [~, pref_areas(2, neuron)] = min(geom_to_plot(:, neuron));
+            pref_areas(3, neuron) = -1;
+        end
+    end
+    
+    figure(1);    
+    pref_areas(1, :) = pref_areas(1, :) + 12;
+    histogram(categorical(pref_areas(1, :), 13:18, palatal_regions));
+    title(sprintf('Tuning Curve, %s, All Palatal Regions', cortical_areas{area}));
+    xlabel('Palatal Areas');
+    ylabel('Counts');
+     
+    figure(2);
+    pref_areas(2, :) = pref_areas(2, :) + 12;
+    histogram(categorical(pref_areas(2, :), 13:18, palatal_regions));
+    title(sprintf('Tuning Curve, %s, All Palatal Regions, Incl. Neg Affinity', cortical_areas{area}));
+    xlabel('Palatal Areas');
+    ylabel('Counts');
+    
     %% CLEARVARS
     
-    clearvars -except area contact_* cortical_areas date graphme Kinematics max_window_size misaligned_trials offset_before_after_contact_events valid_trials
+    clearvars -except area contact_* cortical_areas palatal_regions date contactbyregionsallmarkers Kinematics max_window_size misaligned_trials offset_before_after_contact_events valid_trials
     
 %% END FOR LOOP
 end
