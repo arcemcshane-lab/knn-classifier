@@ -7,9 +7,9 @@ By Mon, Dec 28th:
 Part I:
 10 repetitions for the KNN classifier on each of the following areas:
 
-Ry20190227 (All nerve blocks)
+Ry20190228 (Control)
 
-    M1U (Stopped at rep2, investigating why)
+    M1U 5/10 (running with 2 day walltime correctly)
 
     M1F
 
@@ -17,7 +17,7 @@ Ry20190227 (All nerve blocks)
 
     S1F
 
-Ry20190228 (Control)
+Ry20190227 (All nerve blocks)
 
     M1U
 
