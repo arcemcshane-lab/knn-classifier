@@ -111,7 +111,6 @@ for area = 1:1
     
     end
     
-    %% GRAPH
     i = 1; %change to loop over all of valid_trials
     
     center_line = -3;
@@ -247,36 +246,10 @@ for area = 1:1
     geom_stats.geom_index(1, :) = (geom_stats.avg_fr_before_after - geom_stats.avg_fr_during) ./ (geom_stats.avg_fr_before_after + geom_stats.avg_fr_during);
     
     %% CALCULATE 95% CIs
-    
-%     geom_stats.total = zeros(1, length(spiketimes_cell)); 
-%     
-%     for i = valid_trials
-%         
-%         if size(contact_onsets{i}, 1) > 0
-%         
-%             temp_mat = zeros(size(contact_onsets{i}, 1), 1);
-% 
-%             for neuron = 1:length(spiketimes_cell)
-% 
-%                 temp_mat = horzcat(temp_mat, geom_index{neuron}{i});
-% 
-%             end
-% 
-%             temp_mat(:, 1) = [];
-% 
-%             geom_stats.total = [ geom_stats.total; temp_mat ];
-%             
-%         end
-%         
-%     end
-    
-%     geom_stats.mean(1, :) = mean(geom_stats.total, 1, 'omitnan');
-%     geom_stats.std(1, :) = std(geom_stats.total, 1, 'omitnan');
     geom_stats.se(1, :) = geom_stats.geom_index ./ sqrt(geom_stats.std_mean);
     geom_stats.ci(1, :) = geom_stats.geom_index - geom_stats.se*1.96;
     geom_stats.ci(2, :) = geom_stats.geom_index + geom_stats.se*1.96;
     geom_stats.ci(3, :) = geom_stats.se*1.96;
-%     geom_stats.total(1, :) = [];
     
     %% GRAPH GEOM INDICES
     
@@ -338,7 +311,7 @@ for area = 1:1
     
     hold off
     
-    %% GRAPH CONTACT TUNING CURVES
+    %% CALCULATE GEOM FOR PLOTTING
     % Eventually change to not be agnostic of contact intensity
     
     geom_to_plot = [];
@@ -374,16 +347,18 @@ for area = 1:1
     
     end
 
+    %% GRAPH SINGLE PALATAL TUNING CURVES
+    
     x = 1:length(spiketimes_cell);
 
-    for region = 13:18
-        figure(region - 12);
-        bar(x, geom_to_plot(region - 12, :));
-        ylim([-1, 1]);
-        title(sprintf('Tuning Curve, %s, Palatal Region %i', cortical_areas{area}, region));
-        xlabel('Neuron');
-        ylabel('Geom Index');
-    end
+%     for region = 13:18
+%         figure(region - 12);
+%         bar(x, geom_to_plot(region - 12, :));
+%         ylim([-1, 1]);
+%         title(sprintf('Tuning Curve, %s, Palatal Region %i', cortical_areas{area}, region));
+%         xlabel('Neuron');
+%         ylabel('Geom Index');
+%     end
     
     %% GRAPH/CALCULATE SINGLE NEURON TUNING CURVES
     
@@ -399,19 +374,28 @@ for area = 1:1
         end
     end
     
-    figure(1);    
-    pref_areas(1, :) = pref_areas(1, :) + 12;
-    histogram(categorical(pref_areas(1, :), 13:18, palatal_regions));
-    title(sprintf('Tuning Curve, %s, All Palatal Regions', cortical_areas{area}));
-    xlabel('Palatal Areas');
-    ylabel('Counts');
-     
-    figure(2);
+    figure(1);
+    hold on
     pref_areas(2, :) = pref_areas(2, :) + 12;
-    histogram(categorical(pref_areas(2, :), 13:18, palatal_regions));
+    histogram(categorical(pref_areas(2, (pref_areas(3,:) > 0)), 13:18, palatal_regions));
+    histogram(categorical(pref_areas(2, (pref_areas(3,:) < 0)), 13:18, palatal_regions));
     title(sprintf('Tuning Curve, %s, All Palatal Regions, Incl. Neg Affinity', cortical_areas{area}));
     xlabel('Palatal Areas');
     ylabel('Counts');
+    
+    hold off
+    
+    % MAX TUNING DEPTH
+    
+    tuning_depth = abs(max(geom_to_plot) - min(geom_to_plot));
+    
+    [~, neuron] = max(tuning_depth);
+    
+    figure(2);
+    bar(categorical(palatal_regions), geom_to_plot(:, neuron));
+    ylim([-1, 1]);
+    ylabel('Geom Index');
+    title(sprintf('Tuning Curve for Neuron %i in %s, Max Tuning Depth = %f', neuron, cortical_areas{area}, max(tuning_depth)));
     
     %% CLEARVARS
     
