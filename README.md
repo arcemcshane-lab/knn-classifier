@@ -9,9 +9,9 @@ Part I:
 
 Ry20190228 (Control)
 
-    M1U 5/10 (running with 2 day walltime correctly)
+    M1U 11/10 (Done)
 
-    M1F
+    M1F 0/10 (Running)
 
     S1U
 
@@ -62,7 +62,18 @@ Ye20190510 (All nerve blocks)
 Part II:
 Some sensitivity critera
     
-Mon, Jan 4th: Soft Deadline for Materials
+Mon, Jan 4th: Internal Soft Deadline for Materials
+
+Wed, Jan 6th: Official Hard Deadline for Materials
+
+[ ] One page pdf poster (Mandatory)
+[ ] submit your bio
+[ ] review presenter and photography/recording guidelines
+[ ] acknowledge your presentation time
+[ ] review your abstract's hashtags
+[ ] 20-min audio accompaniment (Optional)
+[ ] QR Code for additional resources (Optional)
+
 
 Mon, Jan 11th @ 10am CT: Presentation
 
