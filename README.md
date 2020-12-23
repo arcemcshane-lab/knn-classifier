@@ -1,6 +1,93 @@
 # KNN-Classifier
 [Document link](https://docs.google.com/document/d/1DlprCeO_yCAFl605km7NrIExPAnbm1X1axNf4igZ-3I/edit?usp=sharing)
 
+Timeline:
+
+By Mon, Dec 28th:
+Part I:
+10 repetitions for the KNN classifier on each of the following areas:
+
+Ry20190228 (Control)
+
+    M1U 11/10 (Done)
+
+    M1F 0/10 (Running)
+
+    S1U
+
+    S1F
+
+Ry20190227 (All nerve blocks)
+
+    M1U
+
+    M1F
+
+    S1U
+
+    S1F
+    
+Triplet
+
+Ye20190508(No lingual nerve)
+
+    M1U
+
+    M1F
+
+    S1U
+
+    S1F
+
+Ye20190509 (Control)
+
+    M1U
+
+    M1F
+
+    S1U
+
+    S1F
+    
+Ye20190510 (All nerve blocks)
+
+    M1U
+
+    M1F
+
+    S1U
+
+    S1F
+    
+Part II:
+Some sensitivity critera
+    
+Mon, Jan 4th: Internal Soft Deadline for Materials
+
+Wed, Jan 6th: Official Hard Deadline for Materials
+
+[ ] One page pdf poster (Mandatory)
+[ ] submit your bio
+[ ] review presenter and photography/recording guidelines
+[ ] acknowledge your presentation time
+[ ] review your abstract's hashtags
+[ ] 20-min audio accompaniment (Optional)
+[ ] QR Code for additional resources (Optional)
+
+
+Mon, Jan 11th @ 10am CT: Presentation
+
+Barry: only item to consider IF IF you have room, is to insert in parentheses a p value and stats test used to reflect 'better' and /or 'improved"'
+
+Electrode Array locations:
+M1U - Rostral Orofacial M1
+M1F - Caudal Orofacial M1(more proprioceptive-dependant activity)
+S1U - area 1,2
+S1F - area 3a/3b(3a is first level processing of )
+
+Utah arrays @ 1.5mm depth to layers IV and V of neocortex
+FM arrays @ 1.0mm depth(?)
+
 KNN Classifier for neuronal spiking
 Outline of all the data and options for classifier construction:
 
