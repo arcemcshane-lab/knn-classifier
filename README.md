@@ -11,21 +11,21 @@ Ry20190228 (Control)
 
     M1U 11/10 (Done)
 
-    M1F 0/10 (Running)
+    M1F 4/10 (Running)
 
-    S1U
+    S1U 4/10 (Running)
 
-    S1F
+    S1F (Error in line 121)
 
 Ry20190227 (All nerve blocks)
 
-    M1U
+    M1U 0/10 (Running)
 
-    M1F
+    M1F 0/10 (Running)
 
-    S1U
+    S1U (Error in line 121)
 
-    S1F
+    S1F 0/10 (Running)
     
 Triplet
 
