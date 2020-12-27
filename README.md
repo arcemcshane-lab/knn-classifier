@@ -1,6 +1,5 @@
 # KNN-Classifier
-[Document link](https://docs.google.com/document/d/1DlprCeO_yCAFl605km7NrIExPAnbm1X1axNf4igZ-3I/edit?usp=sharing)
-
+[Document link](https://docs.google.com/document/d/1DlprCeO_yCAFl605km7NrIExPAnbm1X1axNf4igZ-3I/edit?usp=sharing
 Timeline:
 
 By Mon, Dec 28th:
@@ -11,11 +10,11 @@ Ry20190228 (Control)
 
     M1U 11/10 (Done)
 
-    M1F 4/10 (Running)
+    M1F 10/10 (Done)
 
-    S1U 4/10 (Running)
+    S1U 10/10 (Done)
 
-    S1F (Error)
+    S1F 0/10 (Error)
     [dtang7@cri16in001 ~]$ cat S1FControl.err
     Error using zeros
     CLASSNAME input must be a valid numeric or logical class name.
@@ -27,9 +26,9 @@ Ry20190228 (Control)
 
 Ry20190227 (All nerve blocks)
 
-    M1U 0/10 (Running)
-
-    M1F 0/10 (Running)
+    M1U 8/10 
+    
+    M1F 8/10
 
     S1U 0/10 (Error)
     [dtang7@cri16in001 ~]$ cat S1UNerveBlock.err
@@ -38,19 +37,16 @@ Ry20190227 (All nerve blocks)
     Error in S1UNerveblock (line 121)
     stats:datasample:SampleTooLarge
 
-    S1F 0/10 (Running)
+    S1F 0/10 (Error)
+    [dtang7@cri16in001 ~]$ cat S1FNerveBlock.err
+    Error using datasample (line 165)
+    Sample size K must be less than or equal to the size of the dimension from which to sample for  sampling without replacement.
+
+    Error in S1FNerveblock (line 121)
+
+    stats:datasample:SampleTooLarge
     
 Triplet
-
-Ye20190508(No lingual nerve)
-
-    M1U
-
-    M1F
-
-    S1U
-
-    S1F
 
 Ye20190509 (Control)
 
