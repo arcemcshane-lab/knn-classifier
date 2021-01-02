@@ -14,15 +14,7 @@ Ry20190228 (Control)
 
     S1U 10/10 (Done)
 
-    S1F 0/10 (Error)
-    [dtang7@cri16in001 ~]$ cat S1FControl.err
-    Error using zeros
-    CLASSNAME input must be a valid numeric or logical class name.
-    Error in S1FControl (line 117)
-    MATLAB:zeros:invalidStringInput
-    replacement.
-    Error in S1FControl (line 121)
-    stats:datasample:SampleTooLarge
+    S1F 0/10 (Running)
 
 Ry20190227 (All nerve blocks)
 
@@ -30,21 +22,9 @@ Ry20190227 (All nerve blocks)
     
     M1F 8/10
 
-    S1U 0/10 (Error)
-    [dtang7@cri16in001 ~]$ cat S1UNerveBlock.err
-    Error using datasample (line 165)
-    Sample size K must be less than or equal to the size of the dimension from which to sample for sampling without replacement.
-    Error in S1UNerveblock (line 121)
-    stats:datasample:SampleTooLarge
+    S1U 0/10 (Running)
 
-    S1F 0/10 (Error)
-    [dtang7@cri16in001 ~]$ cat S1FNerveBlock.err
-    Error using datasample (line 165)
-    Sample size K must be less than or equal to the size of the dimension from which to sample for  sampling without replacement.
-
-    Error in S1FNerveblock (line 121)
-
-    stats:datasample:SampleTooLarge
+    S1F 0/10 (Running)
     
 Triplet
 
