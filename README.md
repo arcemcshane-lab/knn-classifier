@@ -56,11 +56,17 @@ Mon, Jan 4th: Internal Soft Deadline for Materials
 Wed, Jan 6th: Official Hard Deadline for Materials
 
 [ ] One page pdf poster (Mandatory)
-[ ] submit your bio
-[ ] review presenter and photography/recording guidelines
-[ ] acknowledge your presentation time
-[ ] review your abstract's hashtags
+
+[x] submit your bio
+
+[x] review presenter and photography/recording guidelines
+
+[x] acknowledge your presentation time
+
+[x] review your abstract's hashtags
+
 [ ] 20-min audio accompaniment (Optional)
+
 [ ] QR Code for additional resources (Optional)
 
 
