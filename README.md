@@ -14,7 +14,7 @@ Ry20190228 (Control)
 
     S1U 10/10 (Done)
 
-    S1F 0/10 (Running)
+    S1F 15/10 (Running)
 
 Ry20190227 (All nerve blocks)
 
@@ -22,9 +22,9 @@ Ry20190227 (All nerve blocks)
     
     M1F 8/10
 
-    S1U 0/10 (Running)
+    S1U 8/10 (Running)
 
-    S1F 0/10 (Running)
+    S1F 8/10 (Running)
     
 Triplet
 
