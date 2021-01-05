@@ -1,5 +1,5 @@
 # KNN-Classifier
-[Document link](https://docs.google.com/document/d/1DlprCeO_yCAFl605km7NrIExPAnbm1X1axNf4igZ-3I/edit?usp=sharing
+[Document link](https://docs.google.com/document/d/1DlprCeO_yCAFl605km7NrIExPAnbm1X1axNf4igZ-3I/edit?usp=sharing)
 Timeline:
 
 By Mon, Dec 28th:
