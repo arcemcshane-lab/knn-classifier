@@ -1,5 +1,5 @@
 %% LOAD DATA
-date = 28;
+date = 27;
 date = num2str(date);
 cortical_areas = {'M1F'; 'M1U'; 'S1F'; 'S1U'};
 palatal_regions = {'Ant. R', 'Ant. L', 'Med. R', 'Med. L', 'Pos. R', 'Pos. L'};
@@ -327,43 +327,43 @@ for area = 1:1
 %     
 %     hold off
 %     
-%     %% CALCULATE GEOM FOR PLOTTING
-%     % Eventually change to not be agnostic of contact intensity
-%     
-%     geom_to_plot = [];
-%     
-%     for region = 13:18
-%         temp = [];
-% 
-%         % iterate per contact event, if region touched during contact event
-%         % then plot geom index
-% 
-%         row = 1;
-% 
-%         for i = valid_trials
-% 
-%             for j = 1:length(contact_onsets{i})
-% 
-%                 if any(contactbyregionsallmarkers{i}(contact_onsets{i}(j, 1):contact_offsets{i}(j, 1), region))
-%                     for neuron = 1:length(spiketimes_cell)
-%                         temp(row, neuron) = geom_stats.index_per_trial{neuron}{i}(j);
-%                     end
-%                     row = row+1;
-%                 end
-% 
-%             end
-% 
-%         end
-% 
-%         x = 1:length(spiketimes_cell);
-%         
-%         temp = mean(temp, 1, 'omitnan');
-% 
-%         geom_to_plot = [geom_to_plot ; temp];
-%     
-%     end
-% 
-%     %% GRAPH SINGLE PALATAL TUNING CURVES
+    %% CALCULATE GEOM FOR PLOTTING
+    % Eventually change to not be agnostic of contact intensity
+    
+    geom_to_plot = [];
+    
+    for region = 13:18
+        temp = [];
+
+        % iterate per contact event, if region touched during contact event
+        % then plot geom index
+
+        row = 1;
+
+        for i = valid_trials
+
+            for j = 1:length(contact_onsets{i})
+
+                if any(contactbyregionsallmarkers{i}(contact_onsets{i}(j, 1):contact_offsets{i}(j, 1), region))
+                    for neuron = 1:length(spiketimes_cell)
+                        temp(row, neuron) = geom_stats.index_per_trial{neuron}{i}(j);
+                    end
+                    row = row+1;
+                end
+
+            end
+
+        end
+
+        x = 1:length(spiketimes_cell);
+        
+        temp = mean(temp, 1, 'omitnan');
+
+        geom_to_plot = [geom_to_plot ; temp];
+    
+    end
+
+    %% GRAPH SINGLE PALATAL TUNING CURVES
 %     
 %     x = 1:length(spiketimes_cell);
 % 
@@ -393,11 +393,16 @@ for area = 1:1
     figure(1);
     hold on
     pref_areas(2, :) = pref_areas(2, :) + 12;
-    histogram(categorical(pref_areas(2, (pref_areas(3,:) > 0)), 13:18, palatal_regions));
-    histogram(categorical(pref_areas(2, (pref_areas(3,:) < 0)), 13:18, palatal_regions));
-    title(sprintf('Tuning Curve, %s, All Palatal Regions, Incl. Neg Affinity', cortical_areas{area}));
+%     histogram(categorical(pref_areas(2, (pref_areas(3,:) > 0)), 13:18, palatal_regions));
+%     histogram(categorical(pref_areas(2, (pref_areas(3,:) < 0)), 13:18, palatal_regions));
+    histogram(categorical(pref_areas(2, :), 13:18, palatal_regions));
+    title(sprintf('Distribution of Peak Modulation Index of %s Across Palatal Regions, Nerve Block', cortical_areas{area}));
     xlabel('Palatal Areas');
     ylabel('Counts');
+    
+    ax = gca;
+    
+    ax.Title.FontSize = 22;
     
     hold off
     
