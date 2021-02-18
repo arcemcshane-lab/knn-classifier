@@ -157,7 +157,7 @@ for i = valid_trials % 78 trials
     end
 end
 
-% clear('i','j','k','locs','hits', 'loc_min', 'start_search', 'end_search', 'hits_inv','nframes','trialnumber','vector','waves');
+clear('i','j','k','locs','hits', 'loc_min', 'start_search', 'end_search', 'hits_inv','nframes','trialnumber','vector','waves');
 
 %% FIND TIME FOR EACH CONTACT EVENT
 knnindex = 1;
@@ -238,14 +238,14 @@ rng(42) % set seed for reproduction
 % modeltable(:, 2) = []; % remove neuronal timesteps from model training data
 Mdl = fitcknn(spiketable, contactstable,  'Distance', 'euclidean', 'OptimizeHyperparameters', {'NumNeighbors'},...
     'HyperparameterOptimizationOptions',...
-    struct('MaxObjectiveEvaluations',64, 'Verbose', 2, 'Repartition', true)); % train classifier model
+    struct('MaxObjectiveEvaluations',2, 'Verbose', 0, 'Repartition', true)); % train classifier model
 
 cvmodel=crossval(Mdl);
     cvmdlloss=kfoldLoss(cvmodel);
    
 %     date = datestr(datetime(now, 'ConvertFrom', 'datenum'), 'mm_dd_yy_HHMM');
     filename = strcat('knnmodel_', date, '_', cortical_areas{area}, '_euclidean_distance');
-    save(filename); % save labeled classifier model
+    save(filename, 'cvmdlloss', 'cvmodel', 'Mdl', 'area'); % save labeled classifier model
 % saveLearnerForCoder(Mdl, filename); % save labeled classifier model
 % disp(filename) % print filename for easy copy pasting, needed for next section
 % clear('Mdl') % do not clear date to call same function again, or specify different date manually
