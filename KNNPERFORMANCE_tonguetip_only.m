@@ -85,7 +85,8 @@ for i = valid_trials
     Contact.waves{i} = [];
 end
 
-for marker = 1:6
+% for marker = 1:6
+for marker = 6
 
     for i = valid_trials
 %         Contact.waves{i} = [];
@@ -255,7 +256,7 @@ end
 
 %     date = datestr(datetime(now, 'ConvertFrom', 'datenum'), 'mm_dd_yy_HHMM');
     filename = strcat('knnmodel_', date, '_', cortical_areas{area}, '_euclidean_distance');
-    save(filename, 'cvmdlloss', 'cvmodel', 'Mdl', 'area', 'mult_cvmdlloss', 'mean_cvmdlloss', 'error'); % save labeled classifier model
+    save(filename, 'area', 'mult_cvmdlloss'); % save labeled classifier model
 % saveLearnerForCoder(Mdl, filename); % save labeled classifier model
 % disp(filename) % print filename for easy copy pasting, needed for next section
 % clear('Mdl') % do not clear date to call same function again, or specify different date manually
