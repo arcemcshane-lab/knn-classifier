@@ -232,24 +232,34 @@ end
 % 
 %         end
 %% TRAIN ClassificationKNN Model
-rng(42) % set seed for reproduction
-% responsetable = int2str(contactstable);
-% modeltable = array2table(knntable);
-% modeltable(:, 2) = []; % remove neuronal timesteps from model training data
-Mdl = fitcknn(spiketable, contactstable,  'Distance', 'euclidean', 'OptimizeHyperparameters', {'NumNeighbors'},...
-    'HyperparameterOptimizationOptions',...
-    struct('MaxObjectiveEvaluations',64, 'Verbose', 0, 'Repartition', true)); % train classifier model
 
-cvmodel=crossval(Mdl);
-    cvmdlloss=kfoldLoss(cvmodel);
-   
+mult_cvmdlloss = [];
+
+for run = 1:10
+%     rng(42) % set seed for reproduction
+    % responsetable = int2str(contactstable);
+    % modeltable = array2table(knntable);
+    % modeltable(:, 2) = []; % remove neuronal timesteps from model training data
+    Mdl = fitcknn(spiketable, contactstable,  'Distance', 'euclidean', 'OptimizeHyperparameters', {'NumNeighbors'},...
+        'HyperparameterOptimizationOptions',...
+        struct('MaxObjectiveEvaluations',64, 'Verbose', 0, 'Repartition', true)); % train classifier model
+
+    cvmodel=crossval(Mdl);
+        cvmdlloss=kfoldLoss(cvmodel);
+
+mult_cvmdlloss(run) = cvmdlloss;
+
+end
+
+mean_cvmdlloss = mean(mult_cvmdlloss);
+error = std(mult_cvmdlloss);
+
 %     date = datestr(datetime(now, 'ConvertFrom', 'datenum'), 'mm_dd_yy_HHMM');
     filename = strcat('knnmodel_', date, '_', cortical_areas{area}, '_euclidean_distance');
-    save(filename, 'cvmdlloss', 'cvmodel', 'Mdl', 'area'); % save labeled classifier model
+    save(filename, 'cvmdlloss', 'cvmodel', 'Mdl', 'area', 'mult_cvmdlloss', 'mean_cvmdlloss', 'error'); % save labeled classifier model
 % saveLearnerForCoder(Mdl, filename); % save labeled classifier model
 % disp(filename) % print filename for easy copy pasting, needed for next section
 % clear('Mdl') % do not clear date to call same function again, or specify different date manually
-
 
 
 %% GENERATE CLASSIFIER CODE
