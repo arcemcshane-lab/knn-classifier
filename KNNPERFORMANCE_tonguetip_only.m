@@ -129,13 +129,13 @@ for marker = 1:6
     %     Contact.stats{i,3} = median(waves(:,5)-waves(:,1)); % median contact frames
     end
 
-end
+
 
 
 for i = valid_trials
     for j = 1:size(Contact.waves{i}, 1) % however many waves in each trial
         clear('vector')
-        vector = Kinematics.points{i}(Contact.waves{i}(j,1):Contact.waves{i}(j,5)-1,28:30); % 3 is trial 28:30 is x,y,z of 10
+        vector = Kinematics.points{i}(Contact.waves{i}(j,1):Contact.waves{i}(j,5)-1,marker+27:marker+27+2); % 3 is trial 28:30 is x,y,z of 10
         Contact.vectors{i}{j} = vector;
     end
 end
@@ -247,12 +247,9 @@ for run = 1:10
     cvmodel=crossval(Mdl);
         cvmdlloss=kfoldLoss(cvmodel);
 
-mult_cvmdlloss(run) = cvmdlloss;
+mult_cvmdlloss = [mult_cvmdlloss cvmdlloss];
 
 end
-
-mean_cvmdlloss = mean(mult_cvmdlloss);
-error = std(mult_cvmdlloss);
 
 %     date = datestr(datetime(now, 'ConvertFrom', 'datenum'), 'mm_dd_yy_HHMM');
     filename = strcat('knnmodel_', date, '_', cortical_areas{area}, '_euclidean_distance');
@@ -260,6 +257,8 @@ error = std(mult_cvmdlloss);
 % saveLearnerForCoder(Mdl, filename); % save labeled classifier model
 % disp(filename) % print filename for easy copy pasting, needed for next section
 % clear('Mdl') % do not clear date to call same function again, or specify different date manually
+
+end
 
 
 %% GENERATE CLASSIFIER CODE
