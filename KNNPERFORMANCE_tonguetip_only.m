@@ -236,6 +236,9 @@ end
 mult_cvmdlloss = [];
 
 for run = 1:10
+    if isempty(contactstable)
+        cvmdlloss = 0;
+    else
 %     rng(42) % set seed for reproduction
     % responsetable = int2str(contactstable);
     % modeltable = array2table(knntable);
@@ -246,6 +249,7 @@ for run = 1:10
 
     cvmodel=crossval(Mdl);
         cvmdlloss=kfoldLoss(cvmodel);
+    end
 
 mult_cvmdlloss = [mult_cvmdlloss cvmdlloss];
 
