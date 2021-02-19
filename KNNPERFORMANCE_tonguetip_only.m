@@ -9,13 +9,13 @@ sorting = false;
 use_parallel = false;
 select_neurons = 'all'; % either an int or 'all'
 
-
 tic
 %% BEGIN FOR LOOP
 for area = 1:length(cortical_areas)
 % for area = 1:1
     NEV = load(strcat('201902', date, '_', cortical_areas{area}, '_sortedspikes.mat'));
     NEV_cell = struct2cell(NEV); %converts to cell for easier indexing
+    mult_cvmdlloss = [];
     
     %% FIND MISALIGNED TRIALS
     width = 0.05; % sliding window width (s)
@@ -232,8 +232,6 @@ end
 % 
 %         end
 %% TRAIN ClassificationKNN Model
-
-mult_cvmdlloss = [];
 
 for run = 1:10
     if isempty(contactstable)
