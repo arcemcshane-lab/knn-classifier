@@ -111,6 +111,8 @@ for area = 1:1
     
     end
     
+    %% RASTER PLOT AND CONTACTS GRAPH
+    
     i = 1; %change to loop over all of valid_trials
     
     center_line = -3;
@@ -121,16 +123,30 @@ for area = 1:1
     for j = 1:size(contact_onsets{i}, 1)
         pos = [contact_onsets{i}(j, 1) center_line-2 contact_offsets{i}(j, 1)-contact_onsets{i}(j, 1) 4];
         rectangle('Position',pos, 'FaceColor', 'w');
+        
+        pos = [contact_onsets{i}(j, 1) 0 contact_offsets{i}(j, 1)-contact_onsets{i}(j, 1) length(spikes) + 1];
+%         xline(contact_onsets{i}(j, 1));
+%         xline(contact_offsets{i}(j, 1));
+        r = rectangle('Position', pos, 'FaceColor', [0 1 1 0.2], 'EdgeColor', [0 0 0 0]);
     end
-    axis([0 2000 -6 length(spiketimes_cell) + 1]);
+%     axis([0 2000 -6 length(spiketimes_cell) + 1]);
+    axis([0 2000 0 length(spiketimes_cell) + 1]);
+    
+    plot(nan, nan, 'Color', 'Cyan');
     
     for neuron = 1:length(spiketimes_cell)
         scatter(spikes{neuron}{i}, zeros(size(spikes{neuron}{i})) + neuron, '|');
     end
     
-    legend({'Contact Events', 'Neuron Spiking'}, 'Location', 'northeastoutside')
+    legend({'LEGEND:', 'Contact Events', 'Neuron Spiking'}, 'Location', 'northeastoutside')
     
     title(sprintf('Spikes and Contact Events, %s', cortical_areas{area}));
+    
+    ax = gca;
+    
+    ax.Title.FontSize = 22;
+    
+    ax.Legend.FontSize = 14;
     
     hold off
     
@@ -251,66 +267,66 @@ for area = 1:1
     geom_stats.ci(2, :) = geom_stats.geom_index + geom_stats.se*1.96;
     geom_stats.ci(3, :) = geom_stats.se*1.96;
     
-    %% GRAPH GEOM INDICES
-    
-    i = 1; % change to iterate over valid_trials
-    neuron = 1; % change to iterate over neurons
-    
-    x = 1:length(spiketimes_cell);
-    
-    fig = figure;
-    fig = bar(x, geom_stats.geom_index);
-    ylim([-1, 1]);
-    
-    hold on
-    
-%     er = errorbar(x, geom_stats.geom_index, -1 * geom_stats.ci(3, :), geom_stats.ci(3, :));
-%     er = errorbar(x, geom_stats.geom_index, -1 * geom_stats.std_mean / sqrt(length(contactbyregionsallmarkers)), geom_stats.std_mean / sqrt(length(contactbyregionsallmarkers)));
-%     er.Color = 'black';
-%     er.LineStyle = 'none';
-    title(sprintf('Geom Indices, %s', cortical_areas{area}));
-    
-    hold off
-    
-    %% GRAPH PER NEURON (as req'd by Fritzie)
-    
-    [geom_max, neuron_max] = max(geom_stats.geom_index);
-    [geom_min, neuron_min] = min(geom_stats.geom_index);
-    
-    i = 1;
-    
-    fig1 = figure(1);
-    hold on
-    
-    for i = valid_trials
-    
-        scatter(fr_during{neuron_max}{i}, fr_before_after{neuron_max}{i}, 'r');
-        scatter(fr_during{neuron_min}{i}, fr_before_after{neuron_min}{i}, 'g');
-        
-    end
-    
-    xlabel('FR During Contact Events');
-    ylabel('FR Before and After Contact Events');
-    legend({sprintf('Max Geom: Neuron %i, Geom Index = %f', neuron_max, geom_max), sprintf('Min Geom: Neuron %i, Geom Index = %f', neuron_min, geom_min)})
-    title(sprintf('Figure 1. All Iterations, %s', cortical_areas{area}));
-    
-    hold off
-    
-    fig3 = figure(3);    
-    
-    hold on
-    
-    scatter(geom_stats.avg_fr_during, geom_stats.avg_fr_before_after);
-    xlabel('Average FR During Contact Events');
-    ylabel('FR Before and After Contact Events');
-    title(sprintf('Figure 3. Average FR During and After Contact Events, %s', cortical_areas{area}));
-    x = max(geom_stats.avg_fr_during);
-    y = max(geom_stats.avg_fr_before_after);
-    plot(linspace(0, max(x, y)), linspace(0, max(x, y)));
-    axis square
-    
-    hold off
-    
+%     %% GRAPH GEOM INDICES
+%     
+%     i = 1; % change to iterate over valid_trials
+%     neuron = 1; % change to iterate over neurons
+%     
+%     x = 1:length(spiketimes_cell);
+%     
+%     fig = figure;
+%     fig = bar(x, geom_stats.geom_index);
+%     ylim([-1, 1]);
+%     
+%     hold on
+%     
+% %     er = errorbar(x, geom_stats.geom_index, -1 * geom_stats.ci(3, :), geom_stats.ci(3, :));
+% %     er = errorbar(x, geom_stats.geom_index, -1 * geom_stats.std_mean / sqrt(length(contactbyregionsallmarkers)), geom_stats.std_mean / sqrt(length(contactbyregionsallmarkers)));
+% %     er.Color = 'black';
+% %     er.LineStyle = 'none';
+%     title(sprintf('Geom Indices, %s', cortical_areas{area}));
+%     
+%     hold off
+%     
+%     %% GRAPH PER NEURON (as req'd by Fritzie)
+%     
+%     [geom_max, neuron_max] = max(geom_stats.geom_index);
+%     [geom_min, neuron_min] = min(geom_stats.geom_index);
+%     
+%     i = 1;
+%     
+%     fig1 = figure(1);
+%     hold on
+%     
+%     for i = valid_trials
+%     
+%         scatter(fr_during{neuron_max}{i}, fr_before_after{neuron_max}{i}, 'r');
+%         scatter(fr_during{neuron_min}{i}, fr_before_after{neuron_min}{i}, 'g');
+%         
+%     end
+%     
+%     xlabel('FR During Contact Events');
+%     ylabel('FR Before and After Contact Events');
+%     legend({sprintf('Max Geom: Neuron %i, Geom Index = %f', neuron_max, geom_max), sprintf('Min Geom: Neuron %i, Geom Index = %f', neuron_min, geom_min)})
+%     title(sprintf('Figure 1. All Iterations, %s', cortical_areas{area}));
+%     
+%     hold off
+%     
+%     fig3 = figure(3);    
+%     
+%     hold on
+%     
+%     scatter(geom_stats.avg_fr_during, geom_stats.avg_fr_before_after);
+%     xlabel('Average FR During Contact Events');
+%     ylabel('FR Before and After Contact Events');
+%     title(sprintf('Figure 3. Average FR During and After Contact Events, %s', cortical_areas{area}));
+%     x = max(geom_stats.avg_fr_during);
+%     y = max(geom_stats.avg_fr_before_after);
+%     plot(linspace(0, max(x, y)), linspace(0, max(x, y)));
+%     axis square
+%     
+%     hold off
+%     
     %% CALCULATE GEOM FOR PLOTTING
     % Eventually change to not be agnostic of contact intensity
     
@@ -348,18 +364,18 @@ for area = 1:1
     end
 
     %% GRAPH SINGLE PALATAL TUNING CURVES
-    
-    x = 1:length(spiketimes_cell);
-
-%     for region = 13:18
-%         figure(region - 12);
-%         bar(x, geom_to_plot(region - 12, :));
-%         ylim([-1, 1]);
-%         title(sprintf('Tuning Curve, %s, Palatal Region %i', cortical_areas{area}, region));
-%         xlabel('Neuron');
-%         ylabel('Geom Index');
-%     end
-    
+%     
+%     x = 1:length(spiketimes_cell);
+% 
+% %     for region = 13:18
+% %         figure(region - 12);
+% %         bar(x, geom_to_plot(region - 12, :));
+% %         ylim([-1, 1]);
+% %         title(sprintf('Tuning Curve, %s, Palatal Region %i', cortical_areas{area}, region));
+% %         xlabel('Neuron');
+% %         ylabel('Geom Index');
+% %     end
+%     
     %% GRAPH/CALCULATE SINGLE NEURON TUNING CURVES
     
     pref_areas = zeros(3, length(spiketimes_cell));
@@ -377,11 +393,16 @@ for area = 1:1
     figure(1);
     hold on
     pref_areas(2, :) = pref_areas(2, :) + 12;
-    histogram(categorical(pref_areas(2, (pref_areas(3,:) > 0)), 13:18, palatal_regions));
-    histogram(categorical(pref_areas(2, (pref_areas(3,:) < 0)), 13:18, palatal_regions));
-    title(sprintf('Tuning Curve, %s, All Palatal Regions, Incl. Neg Affinity', cortical_areas{area}));
+%     histogram(categorical(pref_areas(2, (pref_areas(3,:) > 0)), 13:18, palatal_regions));
+%     histogram(categorical(pref_areas(2, (pref_areas(3,:) < 0)), 13:18, palatal_regions));
+    histogram(categorical(pref_areas(2, :), 13:18, palatal_regions));
+    title(sprintf('Distribution of Peak Modulation Index of %s Across Palatal Regions, Nerve Block', cortical_areas{area}));
     xlabel('Palatal Areas');
     ylabel('Counts');
+    
+    ax = gca;
+    
+    ax.Title.FontSize = 22;
     
     hold off
     
