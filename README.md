@@ -15,7 +15,7 @@ Tasks:
 [ ] 4. Increase k value (k = 111?) for Type A and Type B
 - Since votes are based on activity across unit, the number of units in a cortical regions does not matter.
 
-[ ] 5. Sort grouped horizontal bar graphs by highest (combined) frequency and abridge graph.
+[x] 5. Sort grouped horizontal bar graphs by highest (combined) frequency and abridge graph.
 - Most contact patterns occurs very rarely. Either combine the rare ones as 'other' group or exclude that data and leave a note that the rest do not total over e.g. 1% occurance.
 
 [ ] 6. Run Type A classification on 3 or 5 (should be odd) most frequent contact patterns.
