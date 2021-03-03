@@ -2,6 +2,7 @@
 [Document link](https://docs.google.com/document/d/1DlprCeO_yCAFl605km7NrIExPAnbm1X1axNf4igZ-3I/edit?usp=sharing)
 
 Tasks:
+
 [ ] 1. Type B Classifier
 - The script control flow correctly produces classifiers for each marker. However we should examine whether the absence of 'contact events' in markers 2 3 5 and 6 is expected.
 
@@ -23,7 +24,7 @@ Tasks:
 [ ] 7. Refactor original contact events code
 - I intend to rewrite it with vectorized code to produce a flatter catalogue of contact events similar to JD's Gape cycle data.
 
-Type A Classifier, Contact patterns using all tongue markers
+Type A Classifier, Contact patterns using all tongue markers, k = 1
 
 Ry20190228 (Control)
 
@@ -137,3 +138,7 @@ Greater palatine nerve @ greater palatine foramen
 1. find if a single neuron is highly sensitive as a function of touch events. 
 2. correct this to gape cycle 
 3. When during contact events/gape cycle does the classifier perform better or worse.
+
+Project Milestones:
+SfN, Jan 11th-13th, 2021
+Cosyne, Feb 23rd-26th, 2021
