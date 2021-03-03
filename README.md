@@ -24,6 +24,12 @@ Tasks:
 [ ] 7. Refactor original contact events code
 - I intend to rewrite it with vectorized code to produce a flatter catalogue of contact events similar to JD's Gape cycle data.
 
+[ ] 8. Train and predict classifiers using data from different days.
+- First, train on control and predict on nerve block
+- Second, train on nerve block and predict on control, which is expected to be worse
+- If it's not worse, then try training using combined and predicting on combined/control/nerve block
+- If it is, no step 3
+
 Type A Classifier, Contact patterns using all tongue markers, k = 1
 
 Ry20190228 (Control)
@@ -140,5 +146,7 @@ Greater palatine nerve @ greater palatine foramen
 3. When during contact events/gape cycle does the classifier perform better or worse.
 
 Project Milestones:
+
 SfN, Jan 11th-13th, 2021
+
 Cosyne, Feb 23rd-26th, 2021
