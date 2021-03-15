@@ -1,10 +1,36 @@
 # KNN-Classifier
 [Document link](https://docs.google.com/document/d/1DlprCeO_yCAFl605km7NrIExPAnbm1X1axNf4igZ-3I/edit?usp=sharing)
-Timeline:
 
-By Mon, Dec 28th:
-Part I:
-10 repetitions for the KNN classifier on each of the following areas:
+Tasks:
+
+[ ] 1. Type B Classifier
+- The script control flow correctly produces classifiers for each marker. However we should examine whether the absence of 'contact events' in markers 2 3 5 and 6 is expected.
+
+[ ] 2. Save and compare 'spiketable' for control and nerve block for Type A and Type B.
+- Each classifier type needs a supplemental figure that characterizes the changes in firing rate relative to contact. Fig. 3 of the poster attempts something similar.
+
+[ ] 3. Compare population activity irrespective of tongue kinematics.
+- To support the claim that overall, firing is more sparce for the majority of units. This is measured per trial and averaged across all trials per unit, and the comparison can be depicted with four scatter subplots.
+
+[ ] 4. Increase k value (k = 111?) for Type A and Type B
+- Since votes are based on activity across unit, the number of units in a cortical regions does not matter.
+
+[x] 5. Sort grouped horizontal bar graphs by highest (combined) frequency and abridge graph.
+- Most contact patterns occurs very rarely. Either combine the rare ones as 'other' group or exclude that data and leave a note that the rest do not total over e.g. 1% occurance.
+
+[ ] 6. Run Type A classification on 3 or 5 (should be odd) most frequent contact patterns.
+- The heavy skew in contact patterns might mean the high performances we have so far do not accurately refect the ability of the cortex to predict contact patterns.
+
+[ ] 7. Refactor original contact events code
+- I intend to rewrite it with vectorized code to produce a flatter catalogue of contact events similar to JD's Gape cycle data.
+
+[ ] 8. Train and predict classifiers using data from different days.
+- First, train on control and predict on nerve block
+- Second, train on nerve block and predict on control, which is expected to be worse
+- If it's not worse, then try training using combined and predicting on combined/control/nerve block
+- If it is, no step 3
+
+Type A Classifier, Contact patterns using all tongue markers, k = 1
 
 Ry20190228 (Control)
 
@@ -14,20 +40,30 @@ Ry20190228 (Control)
 
     S1U 10/10 (Done)
 
-    S1F 15/10 (Running)
+    S1F 15/10 (Done)
 
 Ry20190227 (All nerve blocks)
 
-    M1U 8/10 
+    M1U 8/10 (Done)
     
-    M1F 8/10
+    M1F 8/10 (Done)
 
-    S1U 8/10 (Running)
+    S1U 8/10 (Done)
 
-    S1F 8/10 (Running)
+    S1F 8/10 (Done)
     
-Triplet
+Triplet (postponed)
 
+Ye20190508 (No Lingual Nerve)
+
+    M1U
+    
+    M1F
+    
+    S1U
+    
+    S1F
+    
 Ye20190509 (Control)
 
     M1U
@@ -47,38 +83,14 @@ Ye20190510 (All nerve blocks)
     S1U
 
     S1F
-    
-Part II:
-Some sensitivity critera
-    
-Mon, Jan 4th: Internal Soft Deadline for Materials
 
-Wed, Jan 6th: Official Hard Deadline for Materials
-
-[ ] One page pdf poster (Mandatory)
-
-[x] submit your bio
-
-[x] review presenter and photography/recording guidelines
-
-[x] acknowledge your presentation time
-
-[x] review your abstract's hashtags
-
-[ ] 20-min audio accompaniment (Optional)
-
-[ ] QR Code for additional resources (Optional)
-
-
-Mon, Jan 11th @ 10am CT: Presentation
-
-Barry: only item to consider IF IF you have room, is to insert in parentheses a p value and stats test used to reflect 'better' and /or 'improved"'
+Type B Classifier, contact based on tongue marker
 
 Electrode Array locations:
 M1U - Rostral Orofacial M1
 M1F - Caudal Orofacial M1(more proprioceptive-dependant activity)
 S1U - area 1,2
-S1F - area 3a/3b(3a is first level processing of )
+S1F - area 3a/3b(3a is first level processing of for sensory information, Toda, 2002)
 
 Utah arrays @ 1.5mm depth to layers IV and V of neocortex
 FM arrays @ 1.0mm depth(?)
@@ -102,27 +114,6 @@ We can draw different conclusions based on performance quality (low or high, con
 
 Need to be able to generalize out of single day trials to more. Trained classifiers have little value if they correspond to only one monkey on one day.
 
-On 10/28/2020, we have the following kinematic data sets complete:
-    
-Duplet
-
-Ry20190227 (All nerve blocks)
-
-Ry20190228 (Control)
-    
-Triplet
-
-Ye20190508(No lingual nerve, going through the pipeline, won’t get it in time)
-
-Ye20190509 (Control)
-    
-Ye20190510 (All nerve blocks)
-
-Sorted NEV -> Eliminate low SNR units (<2) -> Each region
-
-Completed:
-
-Binary palate region contact with the following regions:
 
 M1U Ry20190227 (All nerve blocks) 190 units
 
@@ -132,11 +123,6 @@ S1U Ry20190227 (All nerve blocks) 33 units
 
 S1F Ry20190227 (All nerve blocks) 27 units
 
-To do, by order of importance:
-
-S1U Ry20190227 (All nerve blocks)
-
-S1U Ry20190228 (No nerve blocks)
 
 Nerve block is:
 
@@ -158,3 +144,9 @@ Greater palatine nerve @ greater palatine foramen
 1. find if a single neuron is highly sensitive as a function of touch events. 
 2. correct this to gape cycle 
 3. When during contact events/gape cycle does the classifier perform better or worse.
+
+Project Milestones:
+
+SfN, Jan 11th-13th, 2021
+
+Cosyne, Feb 23rd-26th, 2021
