@@ -9,8 +9,12 @@ Tasks:
 [ ] 2. Save and compare 'spiketable' for control and nerve block for Type A and Type B.
 - Each classifier type needs a supplemental figure that characterizes the changes in firing rate relative to contact. Fig. 3 of the poster attempts something similar.
 
-[ ] 3. Compare population activity irrespective of tongue kinematics.
+[] 3. Compare population activity irrespective of tongue kinematics.
 - To support the claim that overall, firing is more sparce for the majority of units. This is measured per trial and averaged across all trials per unit, and the comparison can be depicted with four scatter subplots.
+- Needs refinement, spesific to phases of gape cycle as control
+
+[ ] 3.1 Compare population activity with respect to gape cycle
+- Compare duration of sequence, rythmic chewing, and contacts
 
 [ ] 4. Increase k value (k = 111?) for Type A and Type B
 - Since votes are based on activity across unit, the number of units in a cortical regions does not matter.
