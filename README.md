@@ -16,21 +16,21 @@ Tasks:
 [ ] 3.1 Compare population activity with respect to gape cycle
 - Compare duration of sequence, rythmic chewing, and contacts
 
-[ ] 4. Increase k value (k = 111?) for Type A and Type B
+[x] 4. Increase k value (k = 111?) for Type A and Type B
 - Since votes are based on activity across unit, the number of units in a cortical regions does not matter.
 
 [x] 5. Sort grouped horizontal bar graphs by highest (combined) frequency and abridge graph.
 - Most contact patterns occurs very rarely. Either combine the rare ones as 'other' group or exclude that data and leave a note that the rest do not total over e.g. 1% occurance.
 
-[ ] 6. Run Type A classification on 3 or 5 (should be odd) most frequent contact patterns.
+[x] 6. Run Type A classification on 3 or 5 (should be odd) most frequent contact patterns.
 - The heavy skew in contact patterns might mean the high performances we have so far do not accurately refect the ability of the cortex to predict contact patterns.
 
 [ ] 7. Refactor original contact events code
 - I intend to rewrite it with vectorized code to produce a flatter catalogue of contact events similar to JD's Gape cycle data.
 
 [ ] 8. Train and predict classifiers using data from different days.
-- First, train on control and predict on nerve block
-- Second, train on nerve block and predict on control, which is expected to be worse
+- First, train on control and predict on nerve block. The same level of performance suggests the cortext responds the same way to LP contact.
+- Second, train on nerve block and predict on control, which is expected to be worse. This is a control case mostly. If 1 is the same and 2 is worse, the firing pattern is nonlinear.
 - If it's not worse, then try training using combined and predicting on combined/control/nerve block
 - If it is, no step 3
 
