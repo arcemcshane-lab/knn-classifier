@@ -40,6 +40,17 @@ Tasks:
 [ ] 9. Save and compare 'spiketable' for control and nerve block for Type A and Type B.
 - Each classifier type needs a supplemental figure that characterizes the changes in firing rate relative to contact. Fig. 3 of the poster attempts something similar.
 
+[ ] 10. Visualize area around tongue markers
+- We need to know whether we should interpolate marker positions to better represent the tongue and its contact with oral structures, is 8mm enough?
+- Including information pertaining to the size of each oral structure, like distance between extreme verticies in the mesh, would also be helpful
+
+[ ] 11. Determine how oral structure size biases touch frequencies
+- Mid and Pos palate regions have nearly twice the locators than Ant. what justifications do we have for choosing them where they are?
+- We can eliminate the confound by normalizing FR to the frequency of contact, as a weight.
+
+[ ] 12. Create any contact vs no contact comparison figure for each condition for each cortical region
+-Should take the form of 8 double bar graphs. Start with palate to explain classifier results, then move to teeth.
+
 Type A Classifier, 7 most frequent contact patterns using all tongue markers, k = 1
 
 Ry20190228 (Control)
